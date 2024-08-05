@@ -82,6 +82,11 @@ const FlamesCalculator = () => {
           )}
           <div className="flames-emoji">❤️</div>
         </div>
+        <div className="ads-container">
+          <p>Advertisement</p>
+          {/* Example ad placeholder */}
+          <div className="ad-placeholder">Your Ad Here</div>
+        </div>
       </div>
     </>
   );
