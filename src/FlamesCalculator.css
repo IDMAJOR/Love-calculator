@@ -1,0 +1,148 @@
+.flames-container {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f3a6b1, #f5e3e0);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.flames-title {
+  color: #ff6347;
+  font-size: 1.5rem;
+}
+
+.flames-description {
+  font-size: 1.2rem;
+  margin: 20px 0;
+  color: white;
+}
+
+.flames-input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.514);
+  margin: 10px;
+  width: 80%;
+  color: white;
+  background-color: rgb(60 60 60);
+  text-transform: capitalize;
+}
+
+.flames-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.flames-result {
+  margin-top: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.flames-result-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 99, 71, 0.1);
+  color: #ff6347;
+}
+
+.flames-F {
+  color: #f10f40;
+}
+.flames-L {
+  color: #e74c3c;
+}
+.flames-A {
+  color: #9b59b6;
+}
+.flames-M {
+  color: #2ecc71;
+}
+.flames-E {
+  color: #3498db;
+}
+.flames-S {
+  color: #e67e22;
+}
+
+.floating-emojis {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.emoji {
+  position: absolute;
+  font-size: 2rem;
+  animation: float 6s ease-in-out infinite;
+}
+
+.emoji:nth-child(1) {
+  top: 10%;
+  left: 20%;
+}
+.emoji:nth-child(2) {
+  top: 30%;
+  left: 50%;
+}
+.emoji:nth-child(3) {
+  top: 50%;
+  left: 80%;
+}
+.emoji:nth-child(4) {
+  top: 70%;
+  left: 40%;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.flames-emoji {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 3rem;
+  animation: float 5s ease-in-out infinite;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.514);
+}
