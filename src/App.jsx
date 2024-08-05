@@ -70,20 +70,6 @@ const FlamesCalculator = () => {
 
   return (
     <>
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2585127744782561"
-        crossorigin="anonymous"
-      ></script>
-      <ins
-        class="adsbygoogle"
-        style="display:block"
-        data-ad-format="fluid"
-        data-ad-layout-key="-gw-3+1f-3d+2z"
-        data-ad-client="ca-pub-2585127744782561"
-        data-ad-slot="6992761366"
-      ></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       <div className="floating-emojis">
         <span className="emoji">❤️</span>
       </div>
@@ -121,20 +107,29 @@ const FlamesCalculator = () => {
           <div className="flames-emoji">❤️</div>
         </div>
       </div>
+      {/* Google AdSense scripts */}
       <script
         async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2585127744782561"
-        crossorigin="anonymous"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        crossOrigin="anonymous"
       ></script>
       <ins
-        class="adsbygoogle"
-        style="display:block"
-        data-ad-format="fluid"
-        data-ad-layout-key="-gw-3+1f-3d+2z"
+        className="adsbygoogle"
+        style={{ display: "block" }}
         data-ad-client="ca-pub-2585127744782561"
         data-ad-slot="6992761366"
+        data-ad-format="fluid"
+        data-ad-layout-key="-gw-3+1f-3d+2z"
       ></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <ins
+        className="adsbygoogle"
+        style={{ display: "block" }}
+        data-ad-client="ca-pub-2585127744782561"
+        data-ad-slot="9235781325"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>
     </>
   );
 };
