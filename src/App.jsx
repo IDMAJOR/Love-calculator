@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./FlamesCalculator.css"; // Make sure to create this CSS file
+import "./FlamesCalculator.css"; // Ensure this file exists
 
 const FlamesCalculator = () => {
   const [name1, setName1] = useState("");
@@ -8,10 +8,12 @@ const FlamesCalculator = () => {
 
   const calculateFlames = () => {
     if (name1.trim() === "" || name2.trim() === "") return;
+
     const flames = ["F", "L", "A", "M", "E", "S"];
 
-    const processNames = (name) =>
-      name
+    // Helper function to count occurrences of each letter in a name
+    const processNames = (name) => {
+      return name
         .toLowerCase()
         .replace(/\s+/g, "")
         .split("")
@@ -19,29 +21,51 @@ const FlamesCalculator = () => {
           acc[letter] = (acc[letter] || 0) + 1;
           return acc;
         }, {});
+    };
 
-    const countFlames = (count) => {
-      let index = 0;
-      while (flames.length > 1) {
-        index = (index + count - 1) % flames.length;
-        flames.splice(index, 1);
+    // Calculate the difference in letter counts
+    const countDifference = (count1, count2) => {
+      let difference = 0;
+      for (const letter in count1) {
+        difference += Math.abs(count1[letter] - (count2[letter] || 0));
       }
-      return flames[0];
+      for (const letter in count2) {
+        if (!(letter in count1)) {
+          difference += count2[letter];
+        }
+      }
+      return difference;
     };
 
     const name1Count = processNames(name1);
     const name2Count = processNames(name2);
 
-    const totalCount = Object.keys(name1Count).reduce((acc, letter) => {
-      if (name2Count[letter]) {
-        acc += Math.abs(name1Count[letter] - name2Count[letter]);
-      } else {
-        acc += name1Count[letter];
+    // Calculate total count of different letters
+    const totalCount = countDifference(name1Count, name2Count);
+
+    // Function to count FLAMES result based on the total count
+    const countFlames = (count) => {
+      let index = 0;
+      const flamesList = [...flames]; // Create a copy of the flames array
+      while (flamesList.length > 1) {
+        index = (index + count - 1) % flamesList.length;
+        flamesList.splice(index, 1);
       }
-      return acc;
-    }, 0);
+      return flamesList[0];
+    };
 
     setResult(countFlames(totalCount));
+  };
+
+  // Reset the result when input changes
+  const handleName1Change = (e) => {
+    setName1(e.target.value);
+    setResult(""); // Reset result on input change
+  };
+
+  const handleName2Change = (e) => {
+    setName2(e.target.value);
+    setResult(""); // Reset result on input change
   };
 
   return (
@@ -58,14 +82,14 @@ const FlamesCalculator = () => {
           <input
             type="text"
             value={name1}
-            onChange={(e) => setName1(e.target.value)}
+            onChange={handleName1Change}
             placeholder="Enter first name"
             className="flames-input"
           />
           <input
             type="text"
             value={name2}
-            onChange={(e) => setName2(e.target.value)}
+            onChange={handleName2Change}
             placeholder="Enter second name"
             className="flames-input"
           />
@@ -81,11 +105,6 @@ const FlamesCalculator = () => {
             </div>
           )}
           <div className="flames-emoji">❤️</div>
-        </div>
-        <div className="ads-container">
-          <p>Advertisement</p>
-          {/* Example ad placeholder */}
-          <div className="ad-placeholder">Your Ad Here</div>
         </div>
       </div>
     </>
