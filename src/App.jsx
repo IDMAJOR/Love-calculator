@@ -1,71 +1,107 @@
-import React, { useState } from "react";
-import "./FlamesCalculator.css"; // Ensure this file exists
+import React, { useState, useRef } from "react";
+import html2canvas from "html2canvas";
+import "./FlamesCalculator.css";
 
-const FlamesCalculator = () => {
+const LoveCalculator = () => {
   const [name1, setName1] = useState("");
   const [name2, setName2] = useState("");
-  const [result, setResult] = useState("");
+  const [percentage, setPercentage] = useState(null);
+  const [message, setMessage] = useState("");
+  const resultRef = useRef(null);
 
-  const calculateFlames = () => {
-    if (name1.trim() === "" || name2.trim() === "") return;
-
-    const flames = ["F", "L", "A", "M", "E", "S"];
-
-    // Helper function to count occurrences of each letter in a name
-    const processNames = (name) => {
-      return name
-        .toLowerCase()
-        .replace(/\s+/g, "")
-        .split("")
-        .reduce((acc, letter) => {
-          acc[letter] = (acc[letter] || 0) + 1;
-          return acc;
-        }, {});
-    };
-
-    // Calculate the difference in letter counts
-    const countDifference = (count1, count2) => {
-      let difference = 0;
-      for (const letter in count1) {
-        difference += Math.abs(count1[letter] - (count2[letter] || 0));
-      }
-      for (const letter in count2) {
-        if (!(letter in count1)) {
-          difference += count2[letter];
-        }
-      }
-      return difference;
-    };
-
-    const name1Count = processNames(name1);
-    const name2Count = processNames(name2);
-
-    // Calculate total count of different letters
-    const totalCount = countDifference(name1Count, name2Count);
-
-    // Function to count FLAMES result based on the total count
-    const countFlames = (count) => {
-      let index = 0;
-      const flamesList = [...flames]; // Create a copy of the flames array
-      while (flamesList.length > 1) {
-        index = (index + count - 1) % flamesList.length;
-        flamesList.splice(index, 1);
-      }
-      return flamesList[0];
-    };
-
-    setResult(countFlames(totalCount));
+  const cheiroNumerologyMap = {
+    A: 1,
+    I: 1,
+    J: 1,
+    Q: 1,
+    Y: 1,
+    B: 2,
+    K: 2,
+    R: 2,
+    C: 3,
+    G: 3,
+    L: 3,
+    S: 3,
+    D: 4,
+    M: 4,
+    T: 4,
+    E: 5,
+    H: 5,
+    N: 5,
+    X: 5,
+    U: 6,
+    V: 6,
+    W: 6,
+    O: 7,
+    Z: 7,
+    F: 8,
+    P: 8,
   };
 
-  // Reset the result when input changes
+  const calculateNumerologyValue = (name) => {
+    return name
+      .toUpperCase()
+      .split("")
+      .reduce((acc, letter) => {
+        return acc + (cheiroNumerologyMap[letter] || 0);
+      }, 0);
+  };
+
+  const reduceToSingleDigit = (num) => {
+    while (num > 9 && num !== 11 && num !== 22) {
+      num = num
+        .toString()
+        .split("")
+        .reduce((acc, digit) => acc + parseInt(digit), 0);
+    }
+    return num;
+  };
+
+  const calculateLovePercentage = () => {
+    if (name1.trim() === "" || name2.trim() === "") return;
+
+    const name1Value = calculateNumerologyValue(name1);
+    const name2Value = calculateNumerologyValue(name2);
+
+    const totalValue = name1Value + name2Value;
+
+    const reducedValue = reduceToSingleDigit(totalValue);
+
+    const lovePercentage = (reducedValue / 9) * 100;
+    setPercentage(lovePercentage.toFixed(2));
+    setMessage(getLoveMessage(lovePercentage.toFixed(2)));
+  };
+
   const handleName1Change = (e) => {
     setName1(e.target.value);
-    setResult(""); // Reset result on input change
+    setPercentage(null);
+    setMessage("");
   };
 
   const handleName2Change = (e) => {
     setName2(e.target.value);
-    setResult(""); // Reset result on input change
+    setPercentage(null);
+    setMessage("");
+  };
+
+  const captureScreenshotAndDownload = () => {
+    html2canvas(document.body).then((canvas) => {
+      const imageUrl = canvas.toDataURL("image/png");
+
+      // Create a downloadable link for the screenshot
+      const link = document.createElement("a");
+      link.href = imageUrl;
+      link.download = "love-calculator-result.png";
+      document.body.appendChild(link); // Append the link to the body
+      link.click();
+      document.body.removeChild(link); // Remove the link after clicking
+    });
+  };
+
+  const shareOnWhatsApp = () => {
+    // Share the result text via WhatsApp
+    const whatsappUrl = `https://wa.me/?text=Check%20out%20our%20love%20compatibility%20result%21%0A${name1}%20%26%20${name2}%20have%20a%20compatibility%20of%20${percentage}%25.%20Check%20yours%20(Is%20she/him%20meant%20for%20you%3F)%0A${window.location.href}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
@@ -74,84 +110,83 @@ const FlamesCalculator = () => {
         <span className="emoji">❤️</span>
       </div>
       <div className="app">
-        <div className="flames-container">
-          <h1 className="flames-title">💖 FLAMES Calculator 💖</h1>
-          <p className="flames-description">
-            Enter two names to find out your compatibility!
+        <div className="love-container">
+          <h1 className="love-title">💖 Love Calculator 💖</h1>
+          <p className="love-description">
+            Enter two names to find out your compatibility using Cheiro
+            Numerology!
           </p>
           <input
             type="text"
             value={name1}
             onChange={handleName1Change}
             placeholder="Enter first name"
-            className="flames-input"
+            className="love-input"
           />
           <input
             type="text"
             value={name2}
             onChange={handleName2Change}
             placeholder="Enter second name"
-            className="flames-input"
+            className="love-input"
           />
-          <button onClick={calculateFlames} className="flames-button">
+          <button onClick={calculateLovePercentage} className="love-button">
             Calculate
           </button>
-          {result && (
-            <div className="flames-result">
-              <h2>Your FLAMES Result:</h2>
-              <p className={`flames-result-text flames-${result}`}>
-                {getResultDescription(result)}
-              </p>
+          {percentage && (
+            <div ref={resultRef} className="love-result">
+              <h2>Love Compatibility: {percentage}%</h2>
+              <p>{message}</p>
+              <div className="share-section">
+                <button
+                  onClick={captureScreenshotAndDownload}
+                  className="share-button"
+                  style={{
+                    backgroundColor: "#1a191981",
+                    padding: 7,
+                    border: "none",
+                    borderRadius: 7,
+                    color: "whitesmoke",
+                    marginRight: 5,
+                  }}
+                >
+                  Download Screenshot
+                </button>
+                <button
+                  onClick={shareOnWhatsApp}
+                  className="share-button"
+                  style={{
+                    backgroundColor: "#1a191981",
+                    padding: 7,
+                    border: "none",
+                    borderRadius: 7,
+                    color: "whitesmoke",
+                  }}
+                >
+                  Share on WhatsApp
+                </button>
+              </div>
             </div>
           )}
-          <div className="flames-emoji">❤️</div>
+          <div className="love-emoji">❤️</div>
         </div>
       </div>
-      {/* Google AdSense scripts */}
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-        crossOrigin="anonymous"
-      ></script>
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block" }}
-        data-ad-client="ca-pub-2585127744782561"
-        data-ad-slot="6992761366"
-        data-ad-format="fluid"
-        data-ad-layout-key="-gw-3+1f-3d+2z"
-      ></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block" }}
-        data-ad-client="ca-pub-2585127744782561"
-        data-ad-slot="9235781325"
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      ></ins>
     </>
   );
 };
 
-// Helper function to get result description
-const getResultDescription = (result) => {
-  switch (result) {
-    case "F":
-      return "Friends";
-    case "L":
-      return "Lovers";
-    case "A":
-      return "Admirers";
-    case "M":
-      return "Marriage";
-    case "E":
-      return "Enemies";
-    case "S":
-      return "Secret Lovers";
-    default:
-      return "";
+const getLoveMessage = (percentage) => {
+  if (percentage > 80) {
+    return "Wow! You two are meant to be. A very strong connection!";
+  } else if (percentage > 60) {
+    return "There’s a good chance this could turn into something special.";
+  } else if (percentage > 40) {
+    return "Not bad! There’s potential for a strong friendship or relationship.";
+  } else if (percentage > 20) {
+    return "You may need to work on things, but there’s a possibility.";
+  } else {
+    return "The connection is weak, but who knows, miracles can happen!";
   }
 };
 
-export default FlamesCalculator;
+export default LoveCalculator;
